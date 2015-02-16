@@ -1,0 +1,51 @@
+7 philosophes
+
+devant eux un bol de riz
+
+a la gauche du bol une baguette
+
+philosophe ne peut prendre un ebaguette que si elle est sur un coté du bol
+
+-philosophe doit manger avec 2 baguette d et g
+
+repos -> mange pas : pas de baguette dans la main
+
+reflechit et le philosophe tien une seule baguette 
+
+--digestion
+
+philosophe qui reflechit doit avoir manger avant pour se reposer
+
+après repos -> manger ou reflechir si un voisin reflechit alors le voisin aura la prioriter syr la baguette commune
+
+reflechir et manger duree max a faire
+
+evidemment baguette peut etre utiliser par une persone a la fois
+
+
+((	temps d execution  action, quota d utilisation des ressource, temps d execution du programme	))
+
+
+
+
+
+M  : 2
+Rf : 1
+Rp : 0
+
+
+
+philo	       etat 1		etat 2		...
+
+1		0   		  2
+2		2		  0 
+3		0		  1
+4		1		  2
+5		2		  0
+6		0		  2
+7		2		  0
+
+
+
+
+va vers le haut

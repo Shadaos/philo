@@ -5,12 +5,14 @@
 
 # define PHILOSOPHE 7
 
-typedef struct		s_philo
+typedef struct s_philo	*philo;
+
+struct		s_philo
 {
   pthread_t		philo;
   int			nb;
   pthread_mutex_t	stick;
-  struct s_philo	*next;
-}			philo;
+  philo			next;
+};
 
 #endif /* !LEHEADER_H_ */

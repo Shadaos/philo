@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include "leHeader.h"
 
+
+
 int	add_philo(philo *list, int nb)
 {
   philo	new;
@@ -12,6 +14,7 @@ int	add_philo(philo *list, int nb)
   if ((new = malloc(sizeof(struct s_philo))) == NULL)
     return (-1);
   new->nb = nb;
+  new->condition = REST;
   new->next = NULL;
   while (tmp->next != NULL)
     tmp = tmp->next;
@@ -37,6 +40,8 @@ int	main()
   nb_philo = 1;
   if ((list_philo = malloc(sizeof(struct s_philo))) == NULL)
     return (-1);
+  list_philo->nb = 0;
+  list_philo->condition = REST;
   while (nb_philo < PHILOSOPHE)
     {
       if ((add_philo(&list_philo, nb_philo)) == -1)
@@ -44,10 +49,13 @@ int	main()
       ++nb_philo;
     }
   do_clist(list_philo);
+  /*
   while (list_philo != NULL)
-    {
-      printf("%d <- NB\n", list_philo->nb);
-      list_philo = list_philo->next;
-    }
+  {
+  printf("%d <- condition\n", (int)list_philo->condition);
+  printf("%d <- NB\n", list_philo->nb);
+  list_philo = list_philo->next;
+  }
+  */
   return (0);
 }

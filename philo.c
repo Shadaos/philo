@@ -32,6 +32,7 @@ void	do_clist(philo list)
   while (tmp->next != NULL)
     tmp = tmp->next;
   tmp->next = list;
+  list->prev = tmp;
 }
 
 int	main()
@@ -51,13 +52,12 @@ int	main()
       ++nb_philo;
     }
   do_clist(list_philo);
-  /*
-  while (list_philo != NULL)
-  {
-  printf("%d <- condition\n", (int)list_philo->condition);
-  printf("%d <- NB\n", list_philo->nb);
-  list_philo = list_philo->next;
-  }
-  */
+  /*  while (list_philo != NULL)
+      {
+      //  printf("%d <- NB", list_philo->nb);
+      //  printf(" -- ---- %d <- NEXT ", list_philo->next->nb);
+      //  printf(" ---  ---- %d <- PREV \n", list_philo->prev->nb);
+      list_philo = list_philo->next;
+      }*/
   return (0);
 }

@@ -22,6 +22,7 @@ struct		s_philo
   int			nb;
   pthread_mutex_t	stick;
   philo			next;
+  philo			prev;
 };
 
 #endif /* !LEHEADER_H_ */

@@ -18,7 +18,9 @@ int	add_philo(philo *list, int nb)
   new->next = NULL;
   while (tmp->next != NULL)
     tmp = tmp->next;
-  tmp->next = new;
+  if (tmp)
+    tmp->next = new;
+  new->prev = tmp;
   return (0);
 }
 

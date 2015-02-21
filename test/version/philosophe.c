@@ -8,8 +8,11 @@ static void	*phil_acting(void *phil)
   philo	tmp;
 
   tmp = (philo)phil;
-  
-  printf("JE SUIS LE PHILOSOPHE %d\n", tmp->nb);
+
+  while(42)
+    {
+      printf("JE SUIS LE PHILOSOPHE %d\n", tmp->nb);
+    }
 }
 
 static int	add_phil(philo *list, int pos)
@@ -82,7 +85,14 @@ int	food_table(int nb_eater)
       list_philo = list_philo->next;
       ++nb_philo;
     }
-  sleep(10);
+  nb_philo = 0;
+  printf("ok\n");
+  while (nb_philo < nb_eater)
+    {
+      pthread_join(list_philo->unit, NULL);
+      list_philo = list_philo->next;
+      ++nb_philo;      
+    }
 }
 
 int	main()

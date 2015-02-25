@@ -3,7 +3,6 @@
 #include <stdio.h> // PRINTF
 #include "philosophe.h"
 
-
 static void	to_eat(philo unit)
 {
   printf("%d :---> eat\n", unit->nb); 
@@ -31,17 +30,17 @@ static void	*phil_print(void *phil)
     {
       nb_philo = 0;
       
-      while (nb_philo < 7) /* 7 == nombre de philo */
+      while (nb_philo < 3) /* 7 == nombre de philo */
 	{
-	  //printf("nb : %d ----  state : %d\n", tmp->nb, tmp->state);
-	  
+	  printf("nb : %d ----  state : %d\n", tmp->nb, tmp->state);
+	  /*
 	  if (tmp->state == EAT)
 	    to_eat(tmp);
 	  else if (tmp->state == REST)
 	    to_rest(tmp);
 	  else if (tmp->state == THINK)
 	    to_think(tmp);
-	  
+	  */	  
 	  tmp = tmp->next;
 	  ++nb_philo;
 	  }
@@ -54,86 +53,52 @@ static void	*phil_print(void *phil)
 static void	*phil_acting(void *phil)
 {
   philo	tmp;
-
-  tmp = (philo)phil;
-
   int c = 0;
 
+  tmp = (philo)phil;
   while (c < 5)
     {
-      
-      if (pthread_mutex_trylock(&(tmp->stick)) == 0 && pthread_mutex_trylock(&(tmp->next->stick)) == 0)
+      if (pthread_mutex_trylock(&(tmp->stick)) == 0
+	  && pthread_mutex_trylock(&(tmp->next->stick)) == 0
+	  && tmp->next->state == REST)
 	{
+	  printf("NB philo : %d   ->EAT\n", tmp->nb);
 	  tmp->state = EAT;
 	  sleep(1);
 	}
-      else if ((pthread_mutex_trylock(&(tmp->stick)) == 0 || pthread_mutex_trylock(&(tmp->next->stick)) == 0)
-	       && (tmp->prev->state != THINK && tmp->prev->state != EAT))
+      else if ((pthread_mutex_trylock(&(tmp->stick)) == 0
+		|| pthread_mutex_trylock(&(tmp->next->stick)) == 0))
 	{
-	  tmp->state = THINK;
-	  sleep(1);
-	}
-      else if (tmp->state != THINK)
-	{
-	      pthread_mutex_unlock(&(tmp->stick));
-	      pthread_mutex_unlock(&(tmp->next->stick));
-	  tmp->state = REST;
-	  sleep(1);
-	}
-      
-      /*
-      if (tmp->state == THINK)
-	{
-	  if ((pthread_mutex_trylock(&(tmp->stick)) == 0 || pthread_mutex_trylock(&(tmp->next->stick)) == 0)
-	      && (tmp->next->state != THINK && tmp->prev->state != THINK))
+	  //printf("-----*****----****\n");
+	  if (tmp->state == THINK && tmp->next->state == REST)
 	    {
-	      //printf("-----nb    EAT : %d----\n", tmp->nb);
+	      printf("NB philo : %d   ->EAT     after think\n", tmp->nb);
 	      tmp->state = EAT;
 	      sleep(1);
 	    }
 	  else
 	    {
+	      printf("NB philo : %d   ->THINK\n", tmp->nb);
+	      tmp->state = THINK;
 	      sleep(1);
 	    }
+	}
+      else if (pthread_mutex_trylock(&(tmp->stick)) != 0
+	       && pthread_mutex_trylock(&(tmp->next->stick)) != 0
+	       && tmp->state != THINK)
+	{
+	  printf("NB philo : %d   ->REST c:%d\n", tmp->nb, c);
+	  tmp->state = REST;
+	  sleep(1);
+	  pthread_mutex_unlock(&(tmp->stick));
+	  pthread_mutex_unlock(&(tmp->next->stick));
 	}
       else
 	{
-	  //printf("JE SUIS LE PHILOSOPHE %d\n", tmp->nb);
-	  
-	  if (pthread_mutex_trylock(&(tmp->stick)) == 0 && pthread_mutex_trylock(&(tmp->next->stick)) == 0
-	      && (tmp->next->state != THINK || tmp->prev->state != THINK))
-	    {
-	      //printf("-----nb    EAT : %d----\n", tmp->nb);
-	      tmp->state = EAT;
-	      sleep(1);
-	      }
-	  else if ((pthread_mutex_trylock(&(tmp->stick)) == 0)
-		   && (tmp->prev->state != THINK && tmp->prev->state != EAT))
-	    {
-	      printf("-----nb Gauche  : %d----\n", tmp->nb);
-	      tmp->state = THINK;
-	      sleep(1);
-	    }
-	  else if ((pthread_mutex_trylock(&(tmp->next->stick)) == 0
-	       || (pthread_mutex_trylock(&(tmp->stick)) == 0))
-	      && tmp->prev->state != THINK
-	      && tmp->next->state != THINK)
-	    {
-	      //printf("-----nb Droit  : %d----\n", tmp->nb);
-	      tmp->state = THINK;
-	      sleep(1);
-	      //pthread_mutex_unlock(&(tmp->next->stick));
-	    }
-	  else if (tmp->state != THINK)
-	    {
-	      //printf("-----nb   Rest : %d----\n", tmp->nb);
-	      tmp->state = REST;
-	      sleep(1);
-	      pthread_mutex_unlock(&(tmp->stick));
-	      pthread_mutex_unlock(&(tmp->next->stick));
-	    }
+	  printf("NB philo : %d   ->DEFAULT\n", tmp->nb);
+	  tmp->state = THINK;
+	  sleep(1);
 	}
-      */
       c = c + 1;
     }
 }
@@ -208,8 +173,10 @@ int	food_table(int nb_eater)
       pthread_create(&list_philo->unit, NULL, phil_acting, list_philo);
       list_philo = list_philo->next;
       ++nb_philo;
+      /*
       if (nb_philo == nb_eater)
 	pthread_create(&print, NULL, phil_print, list_philo);
+      */
     }
 
   nb_philo = 0;
@@ -219,11 +186,11 @@ int	food_table(int nb_eater)
       list_philo = list_philo->next;
       ++nb_philo;
     }
-  pthread_join(print, NULL);
+  //pthread_join(print, NULL);
 }
 
 int	main()
 {
-  food_table(7);
+  food_table(3);
   return (0);
 }

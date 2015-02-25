@@ -58,47 +58,127 @@ static void	*phil_acting(void *phil)
   tmp = (philo)phil;
   while (c < 5)
     {
-      if (pthread_mutex_trylock(&(tmp->stick)) == 0
-	  && pthread_mutex_trylock(&(tmp->next->stick)) == 0
-	  && tmp->next->state == REST)
+      if (tmp->next->state == REST && pthread_mutex_trylock(&(tmp->stick)) == 0)
 	{
-	  printf("NB philo : %d   ->EAT\n", tmp->nb);
-	  tmp->state = EAT;
-	  sleep(1);
-	}
-      else if ((pthread_mutex_trylock(&(tmp->stick)) == 0
-		|| pthread_mutex_trylock(&(tmp->next->stick)) == 0))
-	{
-	  //printf("-----*****----****\n");
-	  if (tmp->state == THINK && tmp->next->state == REST)
+	  if (pthread_mutex_trylock(&(tmp->next->stick)) != 0)
 	    {
-	      printf("NB philo : %d   ->EAT     after think\n", tmp->nb);
-	      tmp->state = EAT;
+	      printf("bug apprend a coder\n");
+	      pthread_mutex_unlock(&(tmp->stick));
 	      sleep(1);
 	    }
 	  else
 	    {
-	      printf("NB philo : %d   ->THINK\n", tmp->nb);
-	      tmp->state = THINK;
+	      tmp->state = EAT;
+	      printf("nb du philo : %d   ->EAT   apres rest\n", tmp->nb);
 	      sleep(1);
 	    }
 	}
-      else if (pthread_mutex_trylock(&(tmp->stick)) != 0
-	       && pthread_mutex_trylock(&(tmp->next->stick)) != 0
-	       && tmp->state != THINK)
+      if (tmp->state == EAT)
 	{
-	  printf("NB philo : %d   ->REST c:%d\n", tmp->nb, c);
+	  
 	  tmp->state = REST;
+	  printf("nb du philo : %d   ->REST   pas possible de prendre la gauche et la droite\n", tmp->nb);
+	  if (tmp->next->state != THINK)
+	    pthread_mutex_unlock(&(tmp->next->stick));
+	  pthread_mutex_unlock(&(tmp->stick));
+	  sleep(1);
+	}
+      else if (pthread_mutex_trylock(&(tmp->next->stick)) == 0)
+	{
+	  tmp->state = THINK;
+	  printf("nb du philo : %d   ->THINK  pas le gauche\n", tmp->nb);
+	  sleep(1);
+	}
+      else if (pthread_mutex_trylock(&(tmp->stick)) == 0)
+	{
+	  tmp->state = THINK;
+	  printf("nb du philo : %d   ->THINK  pas le droit\n", tmp->nb);
+	  sleep(1);
+	}
+      else
+	{
+	  tmp->state = REST;
+	  printf("nb du philo : %d   ->REST   pas possible de prendre la gauche et la droite\n", tmp->nb);
+	  pthread_mutex_unlock(&(tmp->stick));
+	  pthread_mutex_unlock(&(tmp->next->stick));
+	  sleep(1);
+	}
+
+      /*
+      if (tmp->state == EAT)
+	{
+	  tmp->state = REST;
+	  printf("nb du philo : %d   ->REST apres eat\n", tmp->nb);
+	  sleep(1);
+	}
+      else if ((pthread_mutex_trylock(&(tmp->stick)) == 0
+		&& (pthread_mutex_trylock(&(tmp->next->stick)) == 0)))
+	{
+	  tmp->state = EAT;
+	  printf("nb du philo : %d   ->EAT   apres rest\n", tmp->nb);
 	  sleep(1);
 	  pthread_mutex_unlock(&(tmp->stick));
 	  pthread_mutex_unlock(&(tmp->next->stick));
 	}
-      else
+      else if (tmp->state == THINK && tmp->next->state == REST)
 	{
-	  printf("NB philo : %d   ->DEFAULT\n", tmp->nb);
+	  printf("ok\n");
+	  if (pthread_mutex_trylock(&(tmp->stick)) == 0)
+	    {
+	      tmp->state = EAT;
+	      printf("nb du philo : %d   ->EAT\n", tmp->nb);
+	      sleep(1);
+	  pthread_mutex_unlock(&(tmp->stick));
+	  pthread_mutex_unlock(&(tmp->next->stick));
+	    }
+	  else if (pthread_mutex_trylock(&(tmp->next->stick)) == 0)
+	    {
+	      tmp->state = EAT;
+	      printf("nb du philo : %d   ->EAT  trylock droit\n", tmp->nb);
+	      sleep(1);
+	  pthread_mutex_unlock(&(tmp->stick));
+	  pthread_mutex_unlock(&(tmp->next->stick));
+	    }
+	  else
+	    {
+	      tmp->state = EAT;
+	      printf("nb du philo : %d   ->eat casse couille (les deux thread sont deja lock...)\n", tmp->nb);
+	      sleep(1);
+	  pthread_mutex_unlock(&(tmp->stick));
+	  pthread_mutex_unlock(&(tmp->next->stick));
+	    }
+	    }
+      else if (tmp->state == REST && pthread_mutex_trylock(&(tmp->stick)) == 0)
+	{
+	  //pthread_mutex_unlock(&(tmp->stick));
 	  tmp->state = THINK;
+	  printf("nb du philo : %d   ->THINK left\n", tmp->nb);
 	  sleep(1);
 	}
+      else if (pthread_mutex_trylock(&(tmp->next->stick)) == 0)
+	{
+	  //	  pthread_mutex_unlock(&(tmp->next->stick));
+	  tmp->state = THINK;
+	  printf("nb du philo : %d   ->THINK right\n", tmp->nb);
+	  sleep(1);
+	}
+      else if (tmp->state!=THINK && (pthread_mutex_trylock(&(tmp->stick)) != 0
+				     && (pthread_mutex_trylock(&(tmp->next->stick)) != 0)))
+	{
+
+	  if (pthread_mutex_trylock(&(tmp->stick)) == 0
+	      || (pthread_mutex_trylock(&(tmp->next->stick)) == 0))
+	    printf("/* * *\\n");
+	  tmp->state =REST;
+	  printf("nb du philo : %d   ->REST\n", tmp->nb);
+	  sleep(1);
+	}
+      else
+	{
+	  printf("nb du philo : %d   ->...\n", tmp->nb);
+	  sleep(1);
+	}
+      */
       c = c + 1;
     }
 }

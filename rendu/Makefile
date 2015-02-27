@@ -1,7 +1,16 @@
+##
+## Makefile for  in /home/beauch_a/rendu/PSU/PSU_2014_philo/philo/rendu
+## 
+## Made by Aurelien Beauchef
+## Login   <beauch_a@epitech.net>
+## 
+## Started on  Fri Feb 27 14:25:24 2015 Aurelien Beauchef
+## Last update Fri Feb 27 14:28:32 2015 Aurelien Beauchef
+##
+
 NAME	= philo
 
 SRCS	= Philosophe.c \
-	  Print.c \
 	  init_list.c \
 	  main.c
 

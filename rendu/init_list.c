@@ -1,3 +1,13 @@
+/*
+** init_list.c for  in /home/beauch_a/rendu/PSU/PSU_2014_philo/philo/rendu
+** 
+** Made by Aurelien Beauchef
+** Login   <beauch_a@epitech.net>
+** 
+** Started on  Fri Feb 27 14:25:59 2015 Aurelien Beauchef
+** Last update Fri Feb 27 14:26:00 2015 Aurelien Beauchef
+*/
+
 #include <stdlib.h>
 #include "Philosophe.h"
 

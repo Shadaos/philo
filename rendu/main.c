@@ -1,3 +1,13 @@
+/*
+** main.c for  in /home/beauch_a/rendu/PSU/PSU_2014_philo/philo/rendu
+** 
+** Made by Aurelien Beauchef
+** Login   <beauch_a@epitech.net>
+** 
+** Started on  Fri Feb 27 14:25:30 2015 Aurelien Beauchef
+** Last update Fri Feb 27 14:28:09 2015 Aurelien Beauchef
+*/
+
 #include <pthread.h>
 #include <stdlib.h>
 #include "Philosophe.h"
@@ -19,7 +29,7 @@ static int	food_table(int nb_eater, int nb_stock)
 {
   philo		*list_philo;
   int		nb_philo;
-  
+
   nb_philo = 0;
   if ((list_philo = welcome_philo(nb_eater, nb_stock)) == NULL)
     return (-1);

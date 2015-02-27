@@ -26,8 +26,7 @@ struct			s_philo
   philo			*prev;
 };
 
-philo	*welcome_philo(int nb_eater);
+philo	*welcome_philo(int nb_eater, int nb_stock);
 void	*phil_acting(void *arg);
-void	*print_table(void *arg);
 
 #endif /* !PHILOSOPHE_H_ */

@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include "Philosophe.h"
 
-static int	add_phil(philo **list, int pos)
+static int	add_phil(philo **list, int pos, int nb_stock)
 {
   philo		*ret;
   philo		*tmp;
@@ -10,7 +10,7 @@ static int	add_phil(philo **list, int pos)
   if ((ret = malloc(sizeof(struct s_philo))) == NULL)
     return (-1);
   ret->id = pos;
-  ret->stock = 1;
+  ret->stock = nb_stock;
   ret->state = REST;
   pthread_mutex_init(&(ret->stick), NULL);
   ret->next = NULL;
@@ -26,7 +26,7 @@ static int	add_phil(philo **list, int pos)
   return (0);
 }
 
-philo		*welcome_philo(int nb_eater)
+philo		*welcome_philo(int nb_eater, int nb_stock)
 {
   philo		*ret;
   philo		*tmp;
@@ -37,12 +37,12 @@ philo		*welcome_philo(int nb_eater)
     return (NULL);
   ret->id = 0;
   ret->state = REST;
-  ret->stock = 1;
+  ret->stock = nb_stock;
   pthread_mutex_init(&(ret->stick), NULL);
   ret->next = NULL;
   while (count < nb_eater)
     {
-      if ((add_phil(&ret, count)) == -1)
+      if ((add_phil(&ret, count, nb_stock)) == -1)
 	return (NULL);
       ++count;
     }
